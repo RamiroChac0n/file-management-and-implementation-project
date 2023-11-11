@@ -1,5 +1,5 @@
-#ifndef DB_H
-#define DB_H
+#ifndef DATABASES_H
+#define DATABASES_H
 
 #define DB_HOST "127.0.0.1"
 #define DB_PORT 33060
@@ -7,4 +7,4 @@
 #define DB_PASS "root"
 #define DB_NAME ""
 
-#endif // DB_H
+#endif // DATABASES_H
