@@ -5,6 +5,6 @@
 #define DB_PORT 33060
 #define DB_USER "root"
 #define DB_PASS "root"
-#define DB_NAME ""
+#define DB_NAME "bank_system"
 
 #endif // DATABASES_H
