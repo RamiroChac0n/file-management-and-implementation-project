@@ -24,12 +24,11 @@ MYSQL *connect_to_database() {
     return conn;
 }
 
-void test_database_connection() {
+int test_database_connection() {
     MYSQL *conn = connect_to_database();
     if (conn == NULL) {
-        printf("Error al conectar a la base de datos\n");
+        return 0;
     } else {
-        printf("Conexión exitosa a la base de datos\n");
-        mysql_close(conn);
+        return 1;
     }
 }
