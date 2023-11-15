@@ -5,6 +5,27 @@
 #include "database.h"
 #include "utility.h"
 
+void transfer_money() {
+    system("clear");
+    printf("Transfer Money function\n");
+
+    clear_buffer();
+    getchar();
+}
+
+void account_statement(Account *account) {
+    system("clear");
+    printf("Account Number: %d\n", account->id_account);
+    printf("Password: %s\n", account->password);
+    printf("Balance: %f\n", account->balance);
+    printf("Bank: %d\n", account->id_bank);
+    printf("Type: %d\n", account->id_type);
+    printf("Client: %d\n", account->id_client);
+    
+    clear_buffer();
+    getchar();
+}
+
 void login() {
     system("clear");
     int id_account;
@@ -14,7 +35,7 @@ void login() {
     fflush(stdin);
     scanf("%d", &id_account);
 
-    while (getchar() != '\n');
+    clear_buffer();
     printf("Password: ");
     fgets(password, 100, stdin);
 
@@ -24,23 +45,47 @@ void login() {
 
     if(account != NULL && strcmp(account->password, password) == 0) {
         system("clear");
-        printf("Login Successful\n\n");
-        printf("Account Number: %d\n", account->id_account);
-        printf("Password: %s\n", account->password);
-        printf("Balance: $%.2f\n", account->balance);
-        printf("Bank: %d\n", account->id_bank);
-        printf("Type: %d\n", account->id_type);
-        printf("Client: %d\n", account->id_client);
+        printf("Login Successful");
+        getchar();
 
+        int option;
+        do{
+            system("clear");
+            printf("Select an option:\n");
+            printf("1. Account Statement\n");
+            printf("2. Tranfer Money\n");
+            printf("0. Log out\n");
+            scanf("%d", &option);
+            switch(option){
+                case 1:
+                    account_statement(account);
+                    break;
+                case 2:
+                    transfer_money();
+                    break;
+                case 0:
+                    system("clear");
+                    printf("Logging out...");
+                    break;
+                default:
+                    system("clear");
+                    printf("Invalid option!!!");
+                    clear_buffer();
+                    getchar();
+                    break;
+            }
+        }while(option != 0);
+        clear_buffer();
         getchar();  
     } else {
-        printf("Login Failed\n");
+        printf("Login Failed!!!");
     }
 }
 
-void transfer_money() {
+void deposit_money() {
     system("clear");
-    printf("Transfer Money function\n");
+    printf("Deposit Money function\n");
+    clear_buffer();
     getchar();
 }
 
@@ -50,7 +95,7 @@ void principal_menu() {
     system("clear");
     printf("Select an option:\n");
     printf("1. Login\n");
-    printf("2. Transfer Money\n");
+    printf("2. Deposit Money\n");
     printf("0. Exit\n");
     scanf("%d", &option);
     switch (option) {
@@ -58,13 +103,16 @@ void principal_menu() {
         login();
         break;
       case 2:
-        transfer_money();
+        deposit_money();
         break;
       case 0:
         printf("Exiting...\n");
         break;
       default:
-        printf("Invalid option\n");
+        system("clear");
+        printf("Invalid option!!!");
+        clear_buffer();
+        getchar();
         break;
     }
   } while (option != 0);
