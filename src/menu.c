@@ -27,7 +27,7 @@ void login() {
         printf("Login Successful\n\n");
         printf("Account Number: %d\n", account->id_account);
         printf("Password: %s\n", account->password);
-        printf("Funds: $%.2f\n", account->funds);
+        printf("Balance: $%.2f\n", account->balance);
         printf("Bank: %d\n", account->id_bank);
         printf("Type: %d\n", account->id_type);
         printf("Client: %d\n", account->id_client);

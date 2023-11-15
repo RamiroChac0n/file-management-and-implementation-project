@@ -8,7 +8,7 @@
 typedef struct {
     int id_account;
     char *password;
-    double funds;
+    double balance;
     int id_bank;
     int id_type;
     int id_client;
@@ -72,7 +72,7 @@ Account *get_account(int id_account) {
     result[1].buffer = account->password = malloc(255);
     result[1].buffer_length = 255;
     result[2].buffer_type = MYSQL_TYPE_DOUBLE;
-    result[2].buffer = &account->funds;
+    result[2].buffer = &account->balance;
     result[3].buffer_type = MYSQL_TYPE_LONG;
     result[3].buffer = &account->id_bank;
     result[4].buffer_type = MYSQL_TYPE_LONG;

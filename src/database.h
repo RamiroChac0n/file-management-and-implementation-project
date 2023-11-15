@@ -4,7 +4,7 @@
 typedef struct {
     int id_account;
     char *password;
-    double funds;
+    double balance;
     int id_bank;
     int id_type;
     int id_client;
