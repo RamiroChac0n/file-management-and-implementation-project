@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <mysql/mysql.h>
-//#include "database.h"
 
 typedef struct {
     int id_account;
