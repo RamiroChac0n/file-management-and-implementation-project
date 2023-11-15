@@ -8,3 +8,7 @@ void remove_newline(char *str) {
         str[len-1] = '\0';
     }
 }
+
+void clear_buffer() {
+    while (getchar() != '\n');
+}
