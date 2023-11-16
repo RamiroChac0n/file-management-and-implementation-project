@@ -4,6 +4,13 @@
 #include <string.h>
 #include <mysql/mysql.h>
 
+typedef struct{
+    int id_bank;
+    char *name;
+    char *address;
+    int employees;
+} Bank;
+
 typedef struct {
     int id_account;
     char *password;
@@ -20,6 +27,7 @@ typedef struct {
 #define DB_NAME "banking_system"
 
 #define ACCOUNT_QUERY "SELECT * FROM account WHERE id_account = ?"
+#define BANK_QUERY "SELECT * FROM bank WHERE id_bank = ?"
 
 MYSQL *connect_to_database() {
     MYSQL *conn = mysql_init(NULL);
@@ -42,6 +50,66 @@ int test_database_connection() {
     } else {
         return 1;
     }
+}
+
+Bank *get_bank(int id_account){
+    MYSQL *conn = connect_to_database();
+    MYSQL_STMT *stmt = mysql_stmt_init(conn);
+    MYSQL_BIND param[1];
+    MYSQL_BIND result[4];
+    Bank *bank = malloc(sizeof(Bank));
+    if (stmt == NULL) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_close(conn);
+        exit(1);
+    }
+    if (mysql_stmt_prepare(stmt, BANK_QUERY, strlen(BANK_QUERY)) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        exit(1);
+    }
+    memset(param, 0, sizeof(param));
+    memset(result, 0, sizeof(result));
+    param[0].buffer_type = MYSQL_TYPE_LONG;
+    param[0].buffer = &id_account;
+    result[0].buffer_type = MYSQL_TYPE_LONG;
+    result[0].buffer = &bank->id_bank;
+    result[1].buffer_type = MYSQL_TYPE_STRING;
+    result[1].buffer = bank->name = malloc(255);
+    result[1].buffer_length = 255;
+    result[2].buffer_type = MYSQL_TYPE_STRING;
+    result[2].buffer = bank->address = malloc(255);
+    result[2].buffer_length = 255;
+    result[3].buffer_type = MYSQL_TYPE_LONG;
+    result[3].buffer = &bank->employees;
+    if (mysql_stmt_bind_param(stmt, param) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        exit(1);
+    }
+    if (mysql_stmt_bind_result(stmt, result) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        exit(1);
+    }
+    if (mysql_stmt_execute(stmt) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        exit(1);
+    }
+    if (mysql_stmt_fetch(stmt) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        return NULL;
+    }
+    mysql_stmt_close(stmt);
+    mysql_close(conn);
+    return bank;
 }
 
 Account *get_account(int id_account) {
