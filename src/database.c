@@ -43,6 +43,8 @@ typedef struct {
 #define TYPE_QUERY "SELECT * FROM type WHERE id_type = ?"
 #define OWNER_QUERY "SELECT * FROM client WHERE id_client = ?"
 
+#define ACCOUNT_INSERT "INSERT INTO account (id_account, password, balance, id_bank, id_type, id_client) VALUES (?, ?, ?, ?, ?, ?)"
+
 MYSQL *connect_to_database() {
     MYSQL *conn = mysql_init(NULL);
     if (conn == NULL) {
