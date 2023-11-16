@@ -19,7 +19,7 @@ void account_statement(Account *account) {
     printf("Password: %s\n", account->password);
     printf("Balance: %f\n", account->balance);
     printf("Bank: %s\n", account->bank->name);
-    printf("Type: %d\n", account->id_type);
+    printf("Type: %s\n", account->type->name);
     printf("Owner: %d\n", account->id_client);
     
     clear_buffer();
