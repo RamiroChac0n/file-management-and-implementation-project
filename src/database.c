@@ -15,7 +15,7 @@ typedef struct {
     int id_account;
     char *password;
     double balance;
-    int id_bank;
+    Bank *bank;
     int id_type;
     int id_client;
 } Account;
@@ -117,6 +117,9 @@ Account *get_account(int id_account) {
     MYSQL_STMT *stmt = mysql_stmt_init(conn);
     MYSQL_BIND param[1];
     MYSQL_BIND result[6];
+
+    int id_bank;
+
     Account *account = malloc(sizeof(Account));
     if (stmt == NULL) {
         fprintf(stderr, "%s\n", mysql_error(conn));
@@ -141,7 +144,7 @@ Account *get_account(int id_account) {
     result[2].buffer_type = MYSQL_TYPE_DOUBLE;
     result[2].buffer = &account->balance;
     result[3].buffer_type = MYSQL_TYPE_LONG;
-    result[3].buffer = &account->id_bank;
+    result[3].buffer = &id_bank;
     result[4].buffer_type = MYSQL_TYPE_LONG;
     result[4].buffer = &account->id_type;
     result[5].buffer_type = MYSQL_TYPE_LONG;
@@ -170,6 +173,10 @@ Account *get_account(int id_account) {
         mysql_close(conn);
         return NULL;
     }
+
+    Bank *bank = get_bank(id_bank);
+    account->bank = bank;
+
     mysql_stmt_close(stmt);
     mysql_close(conn);
     return account;

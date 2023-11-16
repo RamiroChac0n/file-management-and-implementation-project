@@ -18,7 +18,7 @@ void account_statement(Account *account) {
     printf("Account Number: %d\n", account->id_account);
     printf("Password: %s\n", account->password);
     printf("Balance: %f\n", account->balance);
-    printf("Bank: %d\n", account->id_bank);
+    printf("Bank: %s\n", account->bank->name);
     printf("Type: %d\n", account->id_type);
     printf("Owner: %d\n", account->id_client);
     

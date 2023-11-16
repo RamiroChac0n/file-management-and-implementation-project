@@ -12,7 +12,7 @@ typedef struct {
     int id_account;
     char *password;
     double balance;
-    int id_bank;
+    Bank *bank;
     int id_type;
     int id_client;
 } Account;
