@@ -16,13 +16,20 @@ typedef struct{
     char *name;
 } Type;
 
+typedef struct{
+    int id_owner;
+    char *name;
+    char *email;
+    char *phone_number;
+} Owner;
+
 typedef struct {
     int id_account;
     char *password;
     double balance;
     Bank *bank;
     Type *type;
-    int id_client;
+    Owner *owner;
 } Account;
 
 #define DB_HOST "127.0.0.1"
@@ -34,6 +41,7 @@ typedef struct {
 #define ACCOUNT_QUERY "SELECT * FROM account WHERE id_account = ?"
 #define BANK_QUERY "SELECT * FROM bank WHERE id_bank = ?"
 #define TYPE_QUERY "SELECT * FROM type WHERE id_type = ?"
+#define OWNER_QUERY "SELECT * FROM client WHERE id_client = ?"
 
 MYSQL *connect_to_database() {
     MYSQL *conn = mysql_init(NULL);
@@ -173,6 +181,67 @@ Type *get_type(int id_type){
     return type;
 }
 
+Owner *get_owner(int id_owner){
+    MYSQL *conn = connect_to_database();
+    MYSQL_STMT *stmt = mysql_stmt_init(conn);
+    MYSQL_BIND param[1];
+    MYSQL_BIND result[4];
+    Owner *owner = malloc(sizeof(Owner));
+    if (stmt == NULL) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_close(conn);
+        exit(1);
+    }
+    if (mysql_stmt_prepare(stmt, OWNER_QUERY, strlen(OWNER_QUERY)) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        exit(1);
+    }
+    memset(param, 0, sizeof(param));
+    memset(result, 0, sizeof(result));
+    param[0].buffer_type = MYSQL_TYPE_LONG;
+    param[0].buffer = &id_owner;
+    result[0].buffer_type = MYSQL_TYPE_LONG;
+    result[0].buffer = &owner->id_owner;
+    result[1].buffer_type = MYSQL_TYPE_STRING;
+    result[1].buffer = owner->name = malloc(255);
+    result[1].buffer_length = 255;
+    result[2].buffer_type = MYSQL_TYPE_STRING;
+    result[2].buffer = owner->email = malloc(255);
+    result[2].buffer_length = 255;
+    result[3].buffer_type = MYSQL_TYPE_STRING;
+    result[3].buffer = owner->phone_number = malloc(255);
+    result[3].buffer_length = 255;
+    if (mysql_stmt_bind_param(stmt, param) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        exit(1);
+    }
+    if (mysql_stmt_bind_result(stmt, result) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        exit(1);
+    }
+    if (mysql_stmt_execute(stmt) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        exit(1);
+    }
+    if (mysql_stmt_fetch(stmt) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        return NULL;
+    }
+    mysql_stmt_close(stmt);
+    mysql_close(conn);
+    return owner;
+}
+
 Account *get_account(int id_account) {
     MYSQL *conn = connect_to_database();
     MYSQL_STMT *stmt = mysql_stmt_init(conn);
@@ -181,6 +250,7 @@ Account *get_account(int id_account) {
 
     int id_bank;
     int id_type;
+    int id_owner;
 
     Account *account = malloc(sizeof(Account));
     if (stmt == NULL) {
@@ -210,7 +280,7 @@ Account *get_account(int id_account) {
     result[4].buffer_type = MYSQL_TYPE_LONG;
     result[4].buffer = &id_type;
     result[5].buffer_type = MYSQL_TYPE_LONG;
-    result[5].buffer = &account->id_client;
+    result[5].buffer = &id_owner;
     if (mysql_stmt_bind_param(stmt, param) != 0) {
         fprintf(stderr, "%s\n", mysql_error(conn));
         mysql_stmt_close(stmt);
@@ -238,9 +308,11 @@ Account *get_account(int id_account) {
 
     Bank *bank = get_bank(id_bank);
     Type *type = get_type(id_type);
+    Owner *owner = get_owner(id_owner);
 
     account->bank = bank;
     account->type = type;
+    account->owner = owner;
 
     mysql_stmt_close(stmt);
     mysql_close(conn);
