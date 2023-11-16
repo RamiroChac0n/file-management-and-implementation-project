@@ -100,9 +100,8 @@ Account *get_account(int id_account) {
         fprintf(stderr, "%s\n", mysql_error(conn));
         mysql_stmt_close(stmt);
         mysql_close(conn);
-        exit(1);
+        return NULL;
     }
-    
     mysql_stmt_close(stmt);
     mysql_close(conn);
     return account;
