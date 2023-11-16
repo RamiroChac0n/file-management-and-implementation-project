@@ -20,7 +20,7 @@ void account_statement(Account *account) {
     printf("Balance: %f\n", account->balance);
     printf("Bank: %d\n", account->id_bank);
     printf("Type: %d\n", account->id_type);
-    printf("Client: %d\n", account->id_client);
+    printf("Owner: %d\n", account->id_client);
     
     clear_buffer();
     getchar();
@@ -78,7 +78,9 @@ void login() {
         clear_buffer();
         getchar();  
     } else {
+        system("clear");
         printf("Login Failed!!!");
+        getchar();
     }
 }
 
