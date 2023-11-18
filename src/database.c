@@ -43,6 +43,7 @@ typedef struct {
 #define TYPE_QUERY "SELECT * FROM type WHERE id_type = ?"
 #define OWNER_QUERY "SELECT * FROM client WHERE id_client = ?"
 
+#define OWNER_INSERT "INSERT INTO client (id_client, name, email, phone_number) VALUES (?, ?, ?, ?)"
 #define ACCOUNT_INSERT "INSERT INTO account (id_account, password, balance, id_bank, id_type, id_client) VALUES (?, ?, ?, ?, ?, ?)"
 
 MYSQL *connect_to_database() {
@@ -319,4 +320,102 @@ Account *get_account(int id_account) {
     mysql_stmt_close(stmt);
     mysql_close(conn);
     return account;
+}
+
+int create_owner(int id_owner, char *name, char *email, char *phone_number) {
+    MYSQL *conn = connect_to_database();
+    MYSQL_STMT *stmt = mysql_stmt_init(conn);
+    MYSQL_BIND param[4];
+    if (stmt == NULL) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_close(conn);
+        exit(1);
+    }
+    if (mysql_stmt_prepare(stmt, OWNER_INSERT, strlen(OWNER_INSERT)) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        exit(1);
+    }
+
+    memset(param, 0, sizeof(param));
+    param[0].buffer_type = MYSQL_TYPE_LONG;
+    param[0].buffer = &id_owner;
+    param[1].buffer_type = MYSQL_TYPE_STRING;
+    param[1].buffer = name;
+    param[1].buffer_length = strlen(name);
+    param[2].buffer_type = MYSQL_TYPE_STRING;
+    param[2].buffer = email;
+    param[2].buffer_length = strlen(email);
+    param[3].buffer_type = MYSQL_TYPE_STRING;
+    param[3].buffer = phone_number;
+    param[3].buffer_length = strlen(phone_number);
+
+    if (mysql_stmt_bind_param(stmt, param) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        return 0;
+    }
+
+    if (mysql_stmt_execute(stmt) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        return 0;
+    }
+
+    mysql_stmt_close(stmt);
+    mysql_close(conn);
+    return 1;
+}
+
+int create_account(int id_account, char *password, double balance, int id_bank, int id_type, int id_owner) {
+    MYSQL *conn = connect_to_database();
+    MYSQL_STMT *stmt = mysql_stmt_init(conn);
+    MYSQL_BIND param[6];
+    if (stmt == NULL) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_close(conn);
+        exit(1);
+    }
+    if (mysql_stmt_prepare(stmt, ACCOUNT_INSERT, strlen(ACCOUNT_INSERT)) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        exit(1);
+    }
+
+    memset(param, 0, sizeof(param));
+    param[0].buffer_type = MYSQL_TYPE_LONG;
+    param[0].buffer = &id_account;
+    param[1].buffer_type = MYSQL_TYPE_STRING;
+    param[1].buffer = password;
+    param[1].buffer_length = strlen(password);
+    param[2].buffer_type = MYSQL_TYPE_DOUBLE;
+    param[2].buffer = &balance;
+    param[3].buffer_type = MYSQL_TYPE_LONG;
+    param[3].buffer = &id_bank;
+    param[4].buffer_type = MYSQL_TYPE_LONG;
+    param[4].buffer = &id_type;
+    param[5].buffer_type = MYSQL_TYPE_LONG;
+    param[5].buffer = &id_owner;
+
+    if (mysql_stmt_bind_param(stmt, param) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        return 0;
+    }
+
+    if (mysql_stmt_execute(stmt) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        return 0;
+    }
+
+    mysql_stmt_close(stmt);
+    mysql_close(conn);
+    return 1;
 }
