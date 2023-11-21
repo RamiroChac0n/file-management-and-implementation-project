@@ -47,6 +47,34 @@ void account_statement(Account *account) {
     getchar();
 }
 
+int close_account(Account *account) {
+    system("clear");
+    printf("Are you sure you want to close your account?\n");
+    printf("1. Yes\n");
+    printf("2. No\n");
+    int option;
+    scanf("%d", &option);
+    if(option == 1){
+        if(delete_account(account->id_account)){
+            system("clear");
+            printf("Account successfully closed!!!");
+            return 0;
+        }else{
+            system("clear");
+            printf("Account closing failed!!!");
+            clear_buffer();
+            getchar();
+            return -1;
+        }
+    }else{
+        system("clear");
+        printf("Account closing canceled!!!");
+        clear_buffer();
+        getchar();
+        return -1;
+    }
+}
+
 void login() {
     system("clear");
     int id_account;
@@ -75,6 +103,7 @@ void login() {
             printf("Select an option:\n");
             printf("1. Account Statement\n");
             printf("2. Tranfer Money\n");
+            printf("3. Close Account\n");
             printf("0. Log out\n");
             scanf("%d", &option);
             switch(option){
@@ -84,6 +113,9 @@ void login() {
                     break;
                 case 2:
                     transfer_money(account);
+                    break;
+                case 3:
+                    option = close_account(account);
                     break;
                 case 0:
                     system("clear");

@@ -40,4 +40,6 @@ int create_account(int id_account, char *password, double balance, int id_bank, 
 
 int set_balance(int id_account, double balance);
 
+int delete_account(int id_owner);
+
 #endif // DATABASES_H
