@@ -38,4 +38,6 @@ Account *get_account(int id_account);
 int create_owner(int id_owner, char *name, char *email, char *phone_number);
 int create_account(int id_account, char *password, double balance, int id_bank, int id_type, int id_owner);
 
+int set_balance(int id_account, double balance);
+
 #endif // DATABASES_H

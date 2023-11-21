@@ -5,9 +5,30 @@
 #include "database.h"
 #include "utility.h"
 
-void transfer_money() {
-    system("clear");
-    printf("Transfer Money function\n");
+void transfer_money(Account *account) {
+    double amount;
+    int id_account_destination;
+    printf("Enter the account number of the destination: ");
+    scanf("%d", &id_account_destination);
+    printf("Enter the amount to deposit: ");
+    scanf("%lf", &amount);
+
+    Account *account_destination = get_account(id_account_destination);
+
+    if(account_destination != NULL && (amount > 0)){
+        if((account->balance - amount) >= 0){
+            set_balance(account->id_account, account->balance - amount);
+            set_balance(account_destination->id_account, account_destination->balance + amount);
+            system("clear");
+            printf("Transfer successful!!!");
+        }else{
+            system("clear");
+            printf("Insufficient funds!!!");
+        }
+    }else{
+        system("clear");
+        printf("Transfer failed!!!");
+    }
 
     clear_buffer();
     getchar();
@@ -15,12 +36,12 @@ void transfer_money() {
 
 void account_statement(Account *account) {
     system("clear");
-    printf("Account Number: %d\n", account->id_account);
-    printf("Password: %s\n", account->password);
-    printf("Balance: %f\n", account->balance);
-    printf("Bank: %s\n", account->bank->name);
-    printf("Type: %s\n", account->type->name);
-    printf("Owner: %s\n", account->owner->name);
+    printf("Account Number:\t%d\n", account->id_account);
+    printf("Password:\t%s\n", account->password);
+    printf("Balance:\t$%.2f\n", account->balance);
+    printf("Bank:\t\t%s\n", account->bank->name);
+    printf("Type:\t\t%s\n", account->type->name);
+    printf("Owner:\t\t%s\n", account->owner->name);
     
     clear_buffer();
     getchar();
@@ -58,14 +79,16 @@ void login() {
             scanf("%d", &option);
             switch(option){
                 case 1:
+                    account = get_account(id_account);
                     account_statement(account);
                     break;
                 case 2:
-                    transfer_money();
+                    transfer_money(account);
                     break;
                 case 0:
                     system("clear");
                     printf("Logging out...");
+                    free(account);
                     break;
                 default:
                     system("clear");
@@ -84,9 +107,17 @@ void login() {
     }
 }
 
-void deposit_money() {
-    system("clear");
-    printf("Deposit Money function\n");
+void deposit_money(Account *account) {
+    double amount;
+    printf("Enter the amount to deposit: ");
+    scanf("%lf", &amount);
+    if((amount > 0) && set_balance(account->id_account, account->balance + amount)){
+        system("clear");
+        printf("Deposit successful!!!");
+    }else{
+        system("clear");
+        printf("Deposit failed!!!");
+    }
     clear_buffer();
     getchar();
 }
@@ -221,7 +252,23 @@ void principal_menu() {
         login();
         break;
       case 2:
-        deposit_money();
+        int id_account;
+        Account *account;
+        do
+        {
+            system("clear");
+            printf("Enter your account number: ");
+            scanf("%d", &id_account);
+            account = get_account(id_account);
+            if(account == NULL){
+                system("clear");
+                printf("Account not found!!!");
+                clear_buffer();
+                getchar();
+            }
+        } while (account == NULL);
+        deposit_money(account);
+        free(account); //CUIDADOOOOOOOOO
         break;
       case 3:
         int id_bank = print_bank_list();

@@ -419,3 +419,45 @@ int create_account(int id_account, char *password, double balance, int id_bank, 
     mysql_close(conn);
     return 1;
 }
+
+int set_balance(int id_account, double balance) {
+    MYSQL *conn = connect_to_database();
+    MYSQL_STMT *stmt = mysql_stmt_init(conn);
+    MYSQL_BIND param[2];
+    if (stmt == NULL) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_close(conn);
+        exit(1);
+    }
+    char *query = "UPDATE account SET balance = ? WHERE id_account = ?";
+    if (mysql_stmt_prepare(stmt, query, strlen(query)) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        exit(1);
+    }
+
+    memset(param, 0, sizeof(param));
+    param[0].buffer_type = MYSQL_TYPE_DOUBLE;
+    param[0].buffer = &balance;
+    param[1].buffer_type = MYSQL_TYPE_LONG;
+    param[1].buffer = &id_account;
+
+    if (mysql_stmt_bind_param(stmt, param) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        return 0;
+    }
+
+    if (mysql_stmt_execute(stmt) != 0) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        mysql_stmt_close(stmt);
+        mysql_close(conn);
+        return 0;
+    }
+
+    mysql_stmt_close(stmt);
+    mysql_close(conn);
+    return 1;
+}
