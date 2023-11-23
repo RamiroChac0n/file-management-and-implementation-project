@@ -1,0 +1,10 @@
+insert into client (id, name, email, phone_number) values (1, 'Shani Baldock', 'sbaldock0@stumbleupon.com', '4988710222');
+insert into client (id, name, email, phone_number) values (2, 'Wynn Wannell', 'wwannell1@etsy.com', '1355667198');
+insert into client (id, name, email, phone_number) values (3, 'Theodore Stabbins', 'tstabbins2@mysql.com', '8512518008');
+insert into client (id, name, email, phone_number) values (4, 'Agneta Maudlin', 'amaudlin3@dagondesign.com', '8499948036');
+insert into client (id, name, email, phone_number) values (5, 'Baldwin Bunford', 'bbunford4@networksolutions.com', '6469485424');
+insert into client (id, name, email, phone_number) values (6, 'Marco Mullane', 'mmullane5@stanford.edu', '3515429677');
+insert into client (id, name, email, phone_number) values (7, 'Gabriellia Paulsen', 'gpaulsen6@walmart.com', '8525167729');
+insert into client (id, name, email, phone_number) values (8, 'Lenard Enevoldsen', 'lenevoldsen7@dagondesign.com', '5544560486');
+insert into client (id, name, email, phone_number) values (9, 'Rafi Buggs', 'rbuggs8@google.ca', '8175108124');
+insert into client (id, name, email, phone_number) values (10, 'Ivonne Radmore', 'iradmore9@usatoday.com', '3853395319');

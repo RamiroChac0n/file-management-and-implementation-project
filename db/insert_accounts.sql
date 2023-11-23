@@ -1,0 +1,9 @@
+insert into account (id, password, funds, id_bank, id_type, id_client) values (1, 'xX6%>&C6_Bm8@$R', 4129.64, 6, 3, 10);
+insert into account (id, password, funds, id_bank, id_type, id_client) values (2, 'sS1%k7V$0%Wy', 3904.1, 3, 2, 9);
+insert into account (id, password, funds, id_bank, id_type, id_client) values (3, 'nX7|B%Ah', 1032.32, 6, 4, 10);
+insert into account (id, password, funds, id_bank, id_type, id_client) values (4, 'zQ0''VKHmD{1d1', 1609.91, 3, 2, 2);
+insert into account (id, password, funds, id_bank, id_type, id_client) values (5, 'sE1}IEjgVxFl0f', 4845.07, 1, 2, 2);
+insert into account (id, password, funds, id_bank, id_type, id_client) values (6, 'rV1@5NC+e{V', 5445.8, 6, 4, 3);
+insert into account (id, password, funds, id_bank, id_type, id_client) values (7, 'lY6+XVuG', 8884.28, 8, 1, 9);
+insert into account (id, password, funds, id_bank, id_type, id_client) values (8, 'tC4%4Osa#', 1692.15, 5, 3, 8);
+insert into account (id, password, funds, id_bank, id_type, id_client) values (9, 'iI4/c+K7tzr', 6871.31, 4, 1, 6);
